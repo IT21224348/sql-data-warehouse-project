@@ -6,6 +6,10 @@ Script Purpose:
   This scripts creates a new database called "Datawarehouse" after checking if it is already available.
   If the database existed, it is dropped and recreated. Additionally scripts sets up 3 schemas
   within the database.
+
+Warning:
+  Running this script will drop the entire "Datawarehouse" database if exists.All the data in the database will be permenantly deleated.
+  Procead with caution and ensure you have proper backups before running this scripts
 */
 
 
