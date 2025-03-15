@@ -1,3 +1,4 @@
+====================================================crm_cust_info======================================================
 --Check for duplicate values in cst_id field
 -- Expectation : No result
 SELECT cst_id, COUNT(*)
@@ -5,6 +6,33 @@ FROM bronze.crm_cust_info
 GROUP BY cst_id
 HAVING COUNT(*) > 1 OR cst_id IS NULL;
 
+--Check for Unwanted Spaces
+--Expectation : No result
+SELECT cst_firstname
+FROM bronze.crm_cust_info
+WHERE cst_firstname != TRIM(cst_firstname);
+
+SELECT cst_lastname
+FROM bronze.crm_cust_info
+WHERE cst_lastname != TRIM(cst_lastname);
+
+SELECT cst_gndr
+FROM bronze.crm_cust_info
+WHERE cst_gndr != TRIM(cst_gndr);
+
+-- Data Standardization and Consistency
+SELECT DISTINCT cst_gndr
+FROM bronze.crm_cust_info
+
+SELECT DISTINCT cst_material_status
+FROM bronze.crm_cust_info
+
+SELECT * 
+FROM bronze.crm_cust_info;
+
+=======================================================crm_prd_info=====================================================
+--Check for duplicate values in cst_id field
+-- Expectation : No result
 SELECT prd_id, COUNT(*)
 FROM bronze.crm_prd_info
 GROUP BY prd_id
@@ -23,46 +51,13 @@ FROM bronze.crm_prd_info
 WHERE REPLACE(SUBSTRING(prd_key,1,5),'-','_')  NOT IN
 (SELECT DISTINCT id FROM bronze.erp_px_cat_g1v2)
 
-SELECT * FROM bronze.erp_px_cat_g1v2 WHERE id = 'CO_PE';
-
 --Check for Unwanted Spaces
 --Expectation : No result
-SELECT cst_firstname
-FROM bronze.crm_cust_info
-WHERE cst_firstname != TRIM(cst_firstname);
-
-SELECT cst_lastname
-FROM bronze.crm_cust_info
-WHERE cst_lastname != TRIM(cst_lastname);
-
-SELECT cst_gndr
-FROM bronze.crm_cust_info
-WHERE cst_gndr != TRIM(cst_gndr);
-
---crm_prd_info table
 SELECT *
 FROM bronze.crm_prd_info
 WHERE prd_nm != TRIM(prd_nm);
 
---crm_sales_details
-SELECT * 
-FROM bronze.crm_sales_details
-WHERE sls_ord_num != TRIM(sls_ord_num)
-
 -- Data Standardization and Consistency
-SELECT DISTINCT cst_gndr
-FROM bronze.crm_cust_info
-
-SELECT DISTINCT cst_material_status
-FROM bronze.crm_cust_info
-
-SELECT * 
-FROM bronze.crm_cust_info;
-
---crm_prd_info
-SELECT * 
-FROM bronze.crm_prd_info;
-
 SELECT DISTINCT prd_line
 FROM bronze.crm_prd_info;
 
@@ -88,6 +83,13 @@ prd_end_dt,
 DATEADD(DAY, -1, LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt)) AS calculated_prd_end_dt
 FROM bronze.crm_prd_info
 WHERE prd_key in ('AC-HE-HL-U509-R','AC-HE-HL-U509-B')
+====================================================crm_sales_details====================================================
+
+--Check for Unwanted Spaces
+--Expectation : No result
+SELECT * 
+FROM bronze.crm_sales_details
+WHERE sls_ord_num != TRIM(sls_ord_num)
 
 --analysing crm_sales_details table
 SELECT * 
@@ -124,6 +126,7 @@ SELECT *
 FROM bronze.crm_sales_details
 WHERE  sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt
 
+--Analyzing business rules
 SELECT sls_sales,sls_quantity,sls_price 
 FROM bronze.crm_sales_details
 WHERE sls_sales != sls_quantity * sls_price
@@ -147,5 +150,3 @@ WHERE sls_price IS NULL OR sls_price <= 0
 --WHERE sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * sls_price
 
 
-SELECT  * 
-FROM bronze.crm_sales_details
