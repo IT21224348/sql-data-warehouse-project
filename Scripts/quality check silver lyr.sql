@@ -150,4 +150,16 @@ FROM silver.crm_sales_details
 WHERE sls_price IS NULL OR sls_price <= 0 
 --WHERE sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * sls_price
 
+====================================================erp_cust_az_12====================================================
+SELECT cid
+FROM silver.erp_cust_az_12
+WHERE cid LIKE 'NASA%'
+
+SELECT bdate
+FROM silver.erp_cust_az_12
+WHERE bdate > GETDATE()
+
+SELECT DISTINCT gen
+FROM silver.erp_cust_az_12
+
 
