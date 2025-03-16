@@ -206,3 +206,22 @@ FROM silver.crm_cust_info)
 --Data Standardization & Consistency
 SELECT DISTINCT cntry
 FROM bronze.erp_loc_a101
+
+====================================================erp_px_cat_g1v2====================================================
+--Check for unwanted space
+SELECT * 
+FROM bronze.erp_px_cat_g1v2
+WHERE cat != TRIM(cat) OR subcat != TRIM(subcat) OR maintenance != TRIM(maintenance)
+
+--Check for Data Consistency and Standardization
+SELECT DISTINCT cat
+FROM bronze.erp_px_cat_g1v2
+
+
+SELECT DISTINCT subcat
+FROM bronze.erp_px_cat_g1v2
+
+SELECT DISTINCT maintenance
+FROM bronze.erp_px_cat_g1v2
+
+
