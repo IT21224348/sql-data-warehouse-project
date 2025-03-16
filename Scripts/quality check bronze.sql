@@ -149,4 +149,33 @@ FROM bronze.crm_sales_details
 WHERE sls_price IS NULL OR sls_price <= 0 
 --WHERE sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * sls_price
 
+====================================================erp_cust_az_12====================================================
+SELECT 
+    cid
+FROM bronze.erp_cust_az_12
+WHERE cid NOT LIKE 'NASA%'
 
+SELECT 
+    COUNT(cid)
+FROM bronze.erp_cust_az_12
+WHERE cid LIKE 'NASA%'
+
+SELECT 
+CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LEN(cid))
+     ELSE cid
+END AS cid,
+	bdate,
+	gen
+FROM bronze.erp_cust_az_12
+WHERE CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LEN(cid))
+     ELSE cid  
+END	 NOT IN (SELECT DISTINCT cst_key FROM silver.crm_cust_info)
+
+--Identify out of range dates
+SELECT bdate
+FROM bronze.erp_cust_az_12
+WHERE bdate < '1924-01-01' OR  bdate > GETDATE()
+
+-- Data Standardization & Consistency
+SELECT DISTINCT gen
+FROM bronze.erp_cust_az_12
