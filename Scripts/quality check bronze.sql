@@ -179,3 +179,30 @@ WHERE bdate < '1924-01-01' OR  bdate > GETDATE()
 -- Data Standardization & Consistency
 SELECT DISTINCT gen
 FROM bronze.erp_cust_az_12
+
+====================================================erp_loc_a101====================================================
+SELECT REPLACE(cid,'-','') cid,
+CASE WHEN TRIM(cntry) = 'DE' THEN 'Germany'
+     WHEN TRIM(cntry) IN ('US','USA') THEN 'United States'
+	 WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'N/A'
+	 ELSE TRIM(cntry)
+END AS cntry
+FROM bronze.erp_loc_a101
+
+
+SELECT cid
+FROM bronze.erp_loc_a101
+
+SELECT cst_key
+FROM silver.crm_cust_info
+
+SELECT REPLACE(cid,'-','') cid
+
+,cntry
+FROM bronze.erp_loc_a101
+WHERE REPLACE(cid,'-','')  NOT IN (SELECT cst_key
+FROM silver.crm_cust_info)
+
+--Data Standardization & Consistency
+SELECT DISTINCT cntry
+FROM bronze.erp_loc_a101
